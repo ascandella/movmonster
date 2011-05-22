@@ -1,4 +1,6 @@
 database: 'sqlite:///Users/echo/src/movmonster/db.sqlite'
 log: movmonster.log
-covers: web/public/covers
-tmdb_key: 
+covers:
+  location: web/public/covers
+  size: mid
+tmdb_key:

@@ -7,11 +7,14 @@ class MovMonster
     DataMapper.setup(:default, @config['database'])
     $logger.debug("Using database: #{@config['database']}")
     DataMapper.finalize
+    @cover_location = File.join(File.dirname(__FILE__), '..', @config['covers']['location'])
   end
 
   def run(dry)
-    $logger.debug(Movie.all)
-    Movie.all.each do |movie|
+    Movie.all(:poster => false).each do |movie|
+      movie.download_best_image(@config['covers']['size'], @cover_location)
+      break
     end
   end
+
 end

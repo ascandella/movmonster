@@ -1,10 +1,12 @@
 #!/usr/bin/env ruby
 
 require 'rubygems'
+require 'bundler/setup'
 
 require 'data_mapper'
 require 'dm-sqlite-adapter'
 require 'logger'
+require 'net/http'
 require 'ruby-tmdb'
 require 'trollop'
 require 'yaml'
