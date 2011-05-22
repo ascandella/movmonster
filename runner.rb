@@ -1,10 +1,15 @@
 #!/usr/bin/env ruby
 
 require 'rubygems'
+
+require 'data_mapper'
+require 'dm-sqlite-adapter'
+require 'logger'
+require 'ruby-tmdb'
 require 'trollop'
 require 'yaml'
-require 'sqlite3'
-require File.join(File.dirname(__FILE__), '/lib/movmonster')
+
+require File.join(File.dirname(__FILE__), '/src/movmonster')
 
 COMMANDS = %w(fill dryrun)
 
@@ -21,8 +26,8 @@ global options:
 EOS
   opt :config,    "Load configuration from this file",
       :default => File.join( File.dirname(__FILE__), 'config.yml')
-  opt :debug,     "Print more output",
-      :default => false
+  opt :debug,     "Print more output", :default => false
+  opt :stdout,    "Print log to stdout", :default => false
   stop_on COMMANDS
 end
 
@@ -32,7 +37,12 @@ dryrun = cmd == 'dryrun'
 Trollop::die :config, "must exist" unless File.exist?(opts[:config])
 config = YAML::load(File.open(opts[:config]))
 
-db = SQLite3::Database.new(File.join(File.dirname(__FILE__), config['database']['location']))
+log_file = opts[:stdout] ? $stdout : File.open(config['log'], 'w+')
+log_level = opts[:debug] ? :debug  : :info
+$logger = Logger.new(log_file, log_level)
+DataMapper::Logger.new(log_file, log_level) 
 
-monster = MovMonster.new(config, opts, db)
+Tmdb.api_key = config['tmdb_key']
+
+monster = MovMonster.new(config, opts)
 monster.run(dryrun)
