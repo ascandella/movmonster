@@ -11,9 +11,18 @@ class Movie
   property :certification, String
   property :poster,   FilePath
 
+  def web_url
+    self.poster.to_s.gsub('web/public/', '')
+  end
+
   def download_best_image(size, location)
     $logger.info("Fetching cover for #{self.name}")
-    tm = TmdbMovie.images({:imdb => self.imdb_id})
+    begin
+      tm = TmdbMovie.images({:imdb => self.imdb_id})
+    rescue => ex
+      $logger.error("Error fetching info fon movie #{self.name}: #{ex.inspect}")
+      return
+    end
     if tm.nil?
       $logger.warn("Movie not found!")
       return
@@ -46,12 +55,20 @@ private
     end
 
     extension_match = @@path_regex.match(uri.path)
+    # Try to save it as #{imdb_id}.#{extension}
     if extension_match[1]
       save_location = "#{self.imdb_id}.#{extension_match[1]}"
     else
+      # We can't determine the extension, use the original name
       save_location = "#{@@name_regex.match(uri.path)[1]}"
     end
     abs_path = File.join(location, save_location)
+
+    if File.exists? abs_path
+      $logger.info "Found existing thumb at location #{abs_path}. " +
+                   "If you with to re-fetch it, please delete the original."
+      self.update :poster => abs_path
+    end
 
     Net::HTTP.start(uri.host) do |http|
       resp = http.get(uri.path)
@@ -60,8 +77,7 @@ private
       end
     end
     $logger.debug("Saved cover to #{abs_path}")
-    self.poster = abs_path
-    self.save
+    self.update :poster => abs_path
   end
 
   @@path_regex = /.*\.([^.]+)/
