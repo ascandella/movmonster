@@ -1,2 +1,10 @@
 .title
-  Index
+  .moviesList.withPosters.clearfix
+    - @movies.each do |movie|
+      .movie
+        %h2= movie.name
+        - if movie.poster
+          %img.poster{:src => movie.web_url}
+        - else
+          .noPoster
+            No Image Available

@@ -11,7 +11,7 @@ require 'ruby-tmdb'
 require 'trollop'
 require 'yaml'
 
-require File.join(File.dirname(__FILE__), '/src/movmonster')
+require File.join(File.dirname(__FILE__), 'src/movmonster')
 
 COMMANDS = %w(fill dryrun)
 

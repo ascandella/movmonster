@@ -1,2 +1,6 @@
 movies.sqlite
 web/.sass-cache
+web/public/*.jpg
+web/public/*.png
+*.log
+.DS_Store

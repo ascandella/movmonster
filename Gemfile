@@ -2,6 +2,7 @@ source :rubygems
 
 gem "coffee-script", ">=2.2.0"
 gem "haml", ">=3.1.1"
+gem "sass", ">=3.1.1"
 gem "sinatra", ">=1.2.6"
 gem "trollop", ">=1.16"
 

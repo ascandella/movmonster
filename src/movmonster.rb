@@ -1,4 +1,4 @@
-require File.join(File.dirname(__FILE__), 'models')
+require File.join(File.dirname(__FILE__), 'movie')
 
 class MovMonster
   def initialize(config, opts)
@@ -7,13 +7,12 @@ class MovMonster
     DataMapper.setup(:default, @config['database'])
     $logger.debug("Using database: #{@config['database']}")
     DataMapper.finalize
-    @cover_location = File.join(File.dirname(__FILE__), '..', @config['covers']['location'])
+    @cover_location = @config['covers']['location']
   end
 
-  def run(dry)
+  def run(dry = false)
     Movie.all(:poster => false).each do |movie|
       movie.download_best_image(@config['covers']['size'], @cover_location)
-      break
     end
   end
 

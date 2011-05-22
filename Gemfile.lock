@@ -69,6 +69,7 @@ GEM
     json (1.4.6)
     multi_json (1.0.2)
     rack (1.2.2)
+    sass (3.1.1)
     sinatra (1.2.6)
       rack (~> 1.1)
       tilt (< 2.0, >= 1.2.2)
@@ -86,5 +87,6 @@ DEPENDENCIES
   dm-sqlite-adapter
   haml (>= 3.1.1)
   ruby-tmdb!
+  sass (>= 3.1.1)
   sinatra (>= 1.2.6)
   trollop (>= 1.16)

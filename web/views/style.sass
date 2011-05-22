@@ -12,7 +12,6 @@ body
   background-color: #1f1f1f
   @include box-shadow(#1f1f1f, 0, 0, 25px)
   color: #ccc
-  height: 100%
   margin: 0 50px
   padding: 0 15px
   .header
@@ -21,3 +20,31 @@ body
     text-align: center
   .content
     padding: 10px 0
+
+    .moviesList
+      .movie
+        float: left
+        margin: 10px
+        h2
+          text-align: center
+        .poster
+          height: 375px
+          width: 250px
+
+
+.clearfix
+  display: inline-block
+  &:after
+    content: "."
+    display: block
+    clear: both
+    visibility: hidden
+    line-height: 0
+    height: 0
+
+html[xmlns] .clearfix
+  display: block
+
+* html .clearfix
+  height: 1%
+
