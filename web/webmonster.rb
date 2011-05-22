@@ -11,3 +11,7 @@ end
 get '/:name.js' do |name|
   coffee name.to_sym
 end
+
+get '/:name.css' do |name|
+  sass name.to_sym
+end

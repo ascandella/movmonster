@@ -1,9 +1,11 @@
 %html
   %head
     %script{:type => 'text/javascript', :src => 'http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js'}
+    %link{:rel => 'stylesheet', :href => 'style.css', :type => 'text/css'}
     %title= "movMonster"
   %body
-    .header= haml :_header, layout: false
-    .content= yield
-    %script{:type => 'text/javascript', :src => 'main.js'}
+    .siteWrapper
+      .header= haml :_header, layout: false
+      .content= yield
+      %script{:type => 'text/javascript', :src => 'main.js'}
     
