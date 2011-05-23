@@ -21,6 +21,12 @@ class Movie
     return ps
   end
 
+  def genre_map
+    h = {}
+    self.genres.split(',').each{ |g| h[ "data-#{g.downcase}"] = true }
+    h
+  end
+
   def download_posters(sizes)
     $logger.info("Fetching cover for #{self.name}")
     begin

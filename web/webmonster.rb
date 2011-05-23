@@ -20,6 +20,7 @@ DataMapper.finalize
 
 get '/' do
   @movies = Movie.all :order => [ :name.asc ]
+  @cats   = config['web_categories']
   haml :index
 end
 

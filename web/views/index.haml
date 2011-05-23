@@ -1,7 +1,9 @@
 .title
+  - @cats.each do |cat|
+    %a.catLink{:href => "#"}= cat
   .moviesList.withPosters.clearfix
     - @movies.each do |movie|
-      .movie
+      .movie{movie.genre_map}
         %h2= movie.name
         - if movie.thumbnail
           %img.poster{:src => movie.thumbnail.href}

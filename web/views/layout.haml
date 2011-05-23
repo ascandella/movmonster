@@ -7,5 +7,6 @@
     .siteWrapper
       .header= haml :_header, layout: false
       .content= yield
+      %script{:type => 'text/javascript', :src => 'jquery.quicksand.js'}
       %script{:type => 'text/javascript', :src => 'main.js'}
     
