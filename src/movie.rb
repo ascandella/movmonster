@@ -1,21 +1,27 @@
 class Movie
   include DataMapper::Resource
 
-  property :filename, FilePath, :key => true
-  property :name,     String
+  property :id,       Serial
+  property :filename, FilePath
+  property :name,     Text
   property :genres,   Text
   property :year,     Integer
   property :rating,   Float
   property :director, Text
   property :imdb_id,  String
   property :certification, String
-  property :poster,   FilePath
 
-  def web_url
-    self.poster.to_s.gsub('web/public/', '')
+  has n, :posters
+
+  def thumbnail
+    ps = posters.detect{ |p| p.size == 'w154' }
+    if ps.nil?
+      ps = posters.first
+    end
+    return ps
   end
 
-  def download_best_image(size, location)
+  def download_posters(sizes)
     $logger.info("Fetching cover for #{self.name}")
     begin
       tm = TmdbMovie.images({:imdb => self.imdb_id})
@@ -38,13 +44,15 @@ class Movie
       return
     end
 
-    save_image(location, posters.detect do |p|
-      p['image']['size'] == size
-    end)
+    sizes.each do |size, location|
+      save_image(size, location, posters.detect do |p|
+        p['image']['size'] == size
+      end)
+    end
   end
 
 private
-  def save_image(location, poster)
+  def save_image(size, location, poster)
     $logger.warn("No image to save") and return if poster.nil?
     url = poster['image']['url']
     begin
@@ -67,7 +75,9 @@ private
     if File.exists? abs_path
       $logger.info "Found existing thumb at location #{abs_path}. " +
                    "If you with to re-fetch it, please delete the original."
-      self.update :poster => abs_path
+      self.posters.create :location => abs_path, :size => size,
+        :width => poster['image']['width'], :height => poster['image']['height']
+      return
     end
 
     Net::HTTP.start(uri.host) do |http|
@@ -77,7 +87,8 @@ private
       end
     end
     $logger.debug("Saved cover to #{abs_path}")
-    self.update :poster => abs_path
+    self.posters.create :location => abs_path,
+      :width => poster['image']['width'], :height => poster['image']['height']
   end
 
   @@path_regex = /.*\.([^.]+)/

@@ -3,8 +3,8 @@
     - @movies.each do |movie|
       .movie
         %h2= movie.name
-        - if movie.poster
-          %img.poster{:src => movie.web_url}
+        - if movie.thumbnail
+          %img.poster{:src => movie.thumbnail.href}
         - else
           .noPoster
             No Image Available

@@ -6,10 +6,11 @@ require 'sinatra'
 require 'haml'
 require 'coffee_script'
 require 'data_mapper'
-require 'dm-sqlite-adapter'
+require 'dm-postgres-adapter'
 require 'sass/plugin'
 
 require File.join(File.dirname(__FILE__), '../src/movie')
+require File.join(File.dirname(__FILE__), '../src/poster')
 
 config = YAML::load(File.open(File.join(File.dirname(__FILE__), '..', 'config.yml')))
 
@@ -18,7 +19,7 @@ DataMapper.setup(:default, config['database'])
 DataMapper.finalize
 
 get '/' do
-  @movies = Movie.all
+  @movies = Movie.all :order => [ :name.asc ]
   haml :index
 end
 

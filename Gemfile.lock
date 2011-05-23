@@ -40,13 +40,13 @@ GEM
       dm-core (~> 1.1.0)
     dm-migrations (1.1.0)
       dm-core (~> 1.1.0)
+    dm-postgres-adapter (1.1.0)
+      dm-do-adapter (~> 1.1.0)
+      do_postgres (~> 0.10.2)
     dm-serializer (1.1.0)
       dm-core (~> 1.1.0)
       fastercsv (~> 1.5.4)
       json (~> 1.4.6)
-    dm-sqlite-adapter (1.1.0)
-      dm-do-adapter (~> 1.1.0)
-      do_sqlite3 (~> 0.10.2)
     dm-timestamps (1.1.0)
       dm-core (~> 1.1.0)
     dm-transactions (1.1.0)
@@ -60,7 +60,7 @@ GEM
       uuidtools (~> 2.1.2)
     dm-validations (1.1.0)
       dm-core (~> 1.1.0)
-    do_sqlite3 (0.10.6)
+    do_postgres (0.10.6)
       data_objects (= 0.10.6)
     execjs (1.0.0)
       multi_json (~> 1.0)
@@ -84,7 +84,7 @@ PLATFORMS
 DEPENDENCIES
   coffee-script (>= 2.2.0)
   data_mapper (>= 1.1.0)
-  dm-sqlite-adapter
+  dm-postgres-adapter
   haml (>= 3.1.1)
   ruby-tmdb!
   sass (>= 3.1.1)
