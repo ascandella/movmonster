@@ -4,3 +4,9 @@ covers:
   mid:   web/public/covers
   w154:  web/public/covers/thumb
 tmdb_key:
+web_categories:
+  - Action
+  - Adventure
+  - Comedy
+  - Drama
+  - Horror

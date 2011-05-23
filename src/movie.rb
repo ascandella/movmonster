@@ -22,7 +22,7 @@ class Movie
   end
 
   def genre_map
-    h = {}
+    h = {'data-id' => id}
     self.genres.split(',').each{ |g| h[ "data-#{g.downcase}"] = true }
     h
   end

@@ -1,12 +1,16 @@
-.title
+.catLinks
   - @cats.each do |cat|
-    %a.catLink{:href => "#"}= cat
-  .moviesList.withPosters.clearfix
-    - @movies.each do |movie|
-      .movie{movie.genre_map}
-        %h2= movie.name
-        - if movie.thumbnail
-          %img.poster{:src => movie.thumbnail.href}
-        - else
-          .noPoster
-            No Image Available
+    %a.catLink{:href => "#", 'data-param' => cat.downcase}= cat
+
+.moviesList.withPosters.clearfix
+  - @movies.each do |movie|
+    .movie{movie.genre_map}
+      %h2= movie.name
+      - if movie.thumbnail
+        %img.poster{:src => movie.thumbnail.href}
+      - else
+        .noPoster
+          No Image Available
+
+.moviesDisplay
+  -# This container gets quicksand'd
