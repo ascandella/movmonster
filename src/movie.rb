@@ -14,11 +14,7 @@ class Movie
   has n, :posters
 
   def thumbnail
-    ps = posters.detect{ |p| p.size == 'w154' }
-    if ps.nil?
-      ps = posters.first
-    end
-    return ps
+    posters.detect{ |p| p.size == 'w154' }
   end
 
   def genre_map
@@ -64,7 +60,7 @@ private
     begin
       uri = URI.parse(url)
     rescue
-      $logger.warn("Couldn't parse URL #{url}!")
+      $logger.error("Couldn't parse URL #{url}!")
       return
     end
 
@@ -78,11 +74,13 @@ private
     end
     abs_path = File.join(location, save_location)
 
+    # Save the poster and link ot to this movie
+    self.posters.create :location => abs_path, :size => size,
+      :width => poster['image']['width'], :height => poster['image']['height']
+
     if File.exists? abs_path
       $logger.info "Found existing thumb at location #{abs_path}. " +
                    "If you with to re-fetch it, please delete the original."
-      self.posters.create :location => abs_path, :size => size,
-        :width => poster['image']['width'], :height => poster['image']['height']
       return
     end
 
@@ -93,8 +91,6 @@ private
       end
     end
     $logger.debug("Saved cover to #{abs_path}")
-    self.posters.create :location => abs_path,
-      :width => poster['image']['width'], :height => poster['image']['height']
   end
 
   @@path_regex = /.*\.([^.]+)/

@@ -1,9 +1,12 @@
+.controlLinks
+  %a.toggleThumbs{:href => "#thumbs"}
+    Toggle Thumbs
 .catLinks
   - @cats.each do |cat|
     %a.catLink{:href => "#", 'data-param' => cat.downcase}= cat
 
-.moviesList.withPosters.clearfix
-  - @movies.each do |movie|
+.moviesList
+  - @movies[0..250].each do |movie|
     .movie{movie.genre_map}
       %h2= movie.name
       - if movie.thumbnail
@@ -11,6 +14,12 @@
       - else
         .noPoster
           No Image Available
+      .details
+        .name= movie.name
+        .year= movie.year
+        .rating= movie.rating
+        .genres= movie.genres
+        .certification= movie.certification
 
-.moviesDisplay
+.moviesDisplay.clearfix
   -# This container gets quicksand'd

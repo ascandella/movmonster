@@ -1,16 +1,14 @@
 $border_color: #333
+$background_color: #1f1f1f
 
-@mixin box-shadow($x,$y,$r,$c)
-  box-shadow: $x $y $r $c
-  -moz-box-shadow: $x $y $r $c
-  -webkit-box-shadow: $x $y $r $c
+@import 'includes.sass'
 
 body
   background-color: #444
   margin: 0
 .siteWrapper
-  background-color: #1f1f1f
-  @include box-shadow(#1f1f1f, 0, 0, 25px)
+  background-color: $background_color
+  @include box-shadow($background_color, 0, 0, 25px)
   color: #ccc
   margin: 0 50px
   padding: 0 15px
@@ -34,14 +32,30 @@ body
       clear: both
       .movie
         float: left
-        margin: 30px
+        margin: 30px 10px
+        position: relative
+        text-align: center
         h2
+          display: none
           font-size: 13px
           text-align: center
         .poster
           height: 220px
-          margin: 0 auto
           width: 154px
+
+        .details
+          border: 1px solid $border_color
+          display: none
+        &.hover
+          .details
+            background: $background_color + #222
+            @include transition('background')
+            display: block
+            position: absolute
+            top: 0
+            left: 0
+            > *
+              cursor: default // CDO
 
 
 .clearfix
