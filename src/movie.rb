@@ -17,8 +17,9 @@ class Movie
     posters.detect{ |p| p.size == 'w154' }
   end
 
-  def genre_map
-    h = {'data-id' => id}
+  # Yea, not really model-level logic, I know
+  def attr_map 
+    h = {'data-id' => id, 'class' => (self.thumbnail() ? 'withPoster' : 'noPoster')}
     self.genres.split(',').each{ |g| h[ "data-#{g.downcase}"] = true }
     h
   end

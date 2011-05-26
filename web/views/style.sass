@@ -25,33 +25,50 @@ body
         color: #aaa
         padding: 0 5px
         text-decoration: none
+        &.active
+          color: #ddd
+    .controlLinks.toggleThumbs
+      display: none
 
     .moviesList
       display: none
     .moviesDisplay
       clear: both
       .movie
+        @include box-shadow(#222, 0, 0, 7px)
         float: left
         margin: 30px 10px
         position: relative
         text-align: center
-        h2
+        .mainTitle
           display: none
           font-size: 13px
           text-align: center
         .poster
           height: 220px
           width: 154px
+        &.noPoster
+          height: 220px
+          width: 154px
+          .details
+            display: block
+            background: $background_color + #111
+
+        .noPoster
+          .noPosterTitle
+            padding-bottom: 10px
 
         .details
+          @include transition('opacity')
           border: 1px solid $border_color
           display: none
+          overflow: hidden
         &.hover
           .details
-            background: $background_color + #222
-            @include transition('background')
+            background: #000
             display: block
             position: absolute
+            opacity: 0.7
             top: 0
             left: 0
             > *

@@ -11,12 +11,13 @@ $ ->
         easing: 'swing'
         useScaling: false
     else
-      $('.moviesDisplay').css('height', '').empty().append $dat.clone()
+      $('.moviesDisplay').css('height', 'auto').empty().append $dat.clone()
 
-  update()
-
-  $('.catLinks .catLink').click (event) ->
+  $catLinks = $('.catLinks .catLink')
+  $catLinks.click (event) ->
     event.preventDefault
+    $catLinks.removeClass('active')
+    $(event.target).addClass('active')
     update('data-' + $(event.target).attr 'data-param')
 
   $('.controlLinks .toggleThumbs').click (event) ->
@@ -25,9 +26,10 @@ $ ->
 
 
   # Use css to show/hide the info box
-  $('.moviesDisplay').delegate '.movie', 'hover', (e) ->
+  $('.moviesDisplay').delegate '.movie.withPoster', 'hover', (e) ->
     $t = $(this)
     $poster = $t.find('.poster')
-    $t.find('.details').width($poster.width())
-      .height($poster.height())
+    if $poster.length > 0
+      $t.find('.details').width($poster.width())
+        .height($poster.height())
     $t.toggleClass('hover')

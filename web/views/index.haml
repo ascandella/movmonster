@@ -1,19 +1,19 @@
+.catLinks
+  - ['All'] + @cats.each do |cat|
+    %a.catLink{:href => "#", 'data-param' => cat.downcase}= cat
 .controlLinks
   %a.toggleThumbs{:href => "#thumbs"}
     Toggle Thumbs
-.catLinks
-  - @cats.each do |cat|
-    %a.catLink{:href => "#", 'data-param' => cat.downcase}= cat
 
 .moviesList
-  - @movies[0..250].each do |movie|
-    .movie{movie.genre_map}
-      %h2= movie.name
+  - @movies.each do |movie|
+    .movie{movie.attr_map}
+      %h2.mainTitle= movie.name
       - if movie.thumbnail
         %img.poster{:src => movie.thumbnail.href}
       - else
         .noPoster
-          No Image Available
+
       .details
         .name= movie.name
         .year= movie.year
