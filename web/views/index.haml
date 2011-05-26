@@ -1,7 +1,8 @@
 .catLinks
   - ['All'] + @cats.each do |cat|
-    %input.catChecker{:class => "catNamed#{cat.downcase}", :type => 'checkbox', 'data-param' => cat.downcase}
-    %a.catLink{:class => "catNamed#{cat.downcase}", :href => "#", 'data-param' => cat.downcase}= cat
+    - safe_name = cat.downcase.gsub(' ', '_')
+    %input.catChecker{:class => "catNamed#{safe_name}", :type => 'checkbox', 'data-param' => safe_name}
+    %a.catLink{:class => "catNamed#{safe_name}", :href => "#", 'data-param' => safe_name}= cat
 .controlLinks
   %a.toggleThumbs{:href => "#thumbs"}
     Toggle Thumbs

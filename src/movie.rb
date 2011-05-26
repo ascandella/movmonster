@@ -20,7 +20,7 @@ class Movie
   # Yea, not really model-level logic, I know
   def attr_map 
     h = {'data-id' => id, 'class' => (self.thumbnail() ? 'withPoster' : 'noPoster')}
-    self.genres.split(',').each{ |g| h[ "data-#{g.downcase}"] = true }
+    self.genres.split(',').each{ |g| h[ "data-#{g.downcase.gsub(' ', '_')}"] = true }
     h
   end
 
