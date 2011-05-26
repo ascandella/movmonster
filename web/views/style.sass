@@ -27,7 +27,7 @@ body
         text-decoration: none
         &.active
           color: #ddd
-    .controlLinks.toggleThumbs
+    .controlLinks .toggleThumbs
       display: none
 
     .moviesList
@@ -63,6 +63,12 @@ body
           border: 1px solid $border_color
           display: none
           overflow: hidden
+          .detailContent
+            padding: 10px
+            text-align: left
+            .name
+              font-size: 18px
+              padding-bottom: 15px
         &.hover
           .details
             background: #000

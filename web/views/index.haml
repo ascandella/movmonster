@@ -1,6 +1,7 @@
 .catLinks
   - ['All'] + @cats.each do |cat|
-    %a.catLink{:href => "#", 'data-param' => cat.downcase}= cat
+    %input.catChecker{:class => "catNamed#{cat.downcase}", :type => 'checkbox', 'data-param' => cat.downcase}
+    %a.catLink{:class => "catNamed#{cat.downcase}", :href => "#", 'data-param' => cat.downcase}= cat
 .controlLinks
   %a.toggleThumbs{:href => "#thumbs"}
     Toggle Thumbs
@@ -15,11 +16,15 @@
         .noPoster
 
       .details
-        .name= movie.name
-        .year= movie.year
-        .rating= movie.rating
-        .genres= movie.genres
-        .certification= movie.certification
+        .detailContent
+          .name= movie.name
+          .year= movie.year
+          .rating= movie.rating
+          .genres= movie.genres
+          .certification= movie.certification
 
 .moviesDisplay.clearfix
   -# This container gets quicksand'd
+  .intro
+    %h2
+      Choose a category to get started
