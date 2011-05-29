@@ -3,7 +3,6 @@ $ ->
   $filterTypes = $('.filters .filterType')
   $filterTypes.each ->
     filters[$(this).attr('data-filterType')] = {}
-  console.log(filters)
 
   update =  ->
     $dat = $('.moviesList .movie')
@@ -56,10 +55,11 @@ $ ->
     $t.toggleClass('hover')
 
   updateFilterStyles = ->
-    console.log(filters)
     $filterTypes.each ->
       $filter = $(this)
       ftype = $filter.attr('data-filterType')
       $filter.find('.styledFilter').removeClass('active').each ->
         $t = $(this)
         $t.addClass 'active' if filters[ftype][$t.attr('data-param')]
+
+  $filterTypes.find('input:checkbox').uniform()
