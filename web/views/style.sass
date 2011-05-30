@@ -20,19 +20,35 @@ body
   .content
     padding: 10px 0
 
-    .catLinks
-      float: right
-      .catLink
-        color: #aaa
-        padding: 0 5px
-        text-decoration: none
-        &.active
-          color: #ddd
-    .controlLinks .toggleThumbs
+    .filters
       display: none
+      .filterType
+        .checker
+          position: relative
+          top: -1px
+          left: 30px
+          margin-right: 0
+        .styledFilter
+          @include round-border(3px)
+          padding:
+            left: 30px
+            right: 5px
+          &.active
+            color: $background_color
+            background: #ccc
+      .catLinks
+        float: right
+        .catLink
+          color: #aaa
+          margin: 0
+            right: 5px
+          text-decoration: none
+          &:last-child
+            margin-right: 0
 
     .moviesList
       display: none
+
     .moviesDisplay
       clear: both
       .movie
@@ -48,6 +64,9 @@ body
         .poster
           height: 220px
           width: 154px
+        &.lazyLoadNeeded
+          .poster
+            visibility: hidden
         &.noPoster
           height: 220px
           width: 154px
@@ -80,6 +99,13 @@ body
             left: 0
             > *
               cursor: default // CDO
+
+    .noMovies
+      display: none
+      text-align: center
+    .status
+      .progress
+        height: 15px
 
 
 .hide

@@ -3,6 +3,13 @@
   -moz-box-shadow: $x $y $r $c
   -webkit-box-shadow: $x $y $r $c
 
+
+@mixin round-border($radius)
+  border-radius: $radius
+  -moz-border-radius: $radius
+  -webkit-border-radius: $radius
+
+
 @mixin transition($property, $duration: 0.5s)
   @if type-of($duration) == string
     $duration: unquote($duration)
