@@ -7,8 +7,6 @@ $ ->
         filters.category = {}
 
   $filterTypes = $('.filters .filterType')
-  $filterTypes.each ->
-    filters[$(this).attr('data-filterType')] = {}
 
   update =  ->
     $dat = $('.moviesList .movie')
@@ -16,16 +14,21 @@ $ ->
       for fKey, fValue of filters[key]
         $dat = $dat.filter("[data-#{fKey}='data-#{fKey}']") if filters[key][fKey]
 
+    cb = -> updateMargins() unless _margins_set
     if $dat.length < 30
       $('.moviesDisplay').quicksand $dat,
         adjustHeight: 'auto'
         duration: 600
         easing: 'swing'
         useScaling: false
+      , cb
     else
-      $('.moviesDisplay').css('height', 'auto').empty().append $dat.clone()
+      $('.moviesDisplay').css('height', 'auto')
+        .empty().append $dat.clone()
+      cb()
       if $dat.length == 0
-        $('.moviesDisplay').append $('.noMovies').clone().fadeIn()
+        $('.moviesDisplay').append($('.noMovies'))
+          .clone().fadeIn()
 
   $filterTypes.find('.actionFilter').click (event) ->
     event.preventDefault()
@@ -69,8 +72,6 @@ $ ->
         $t = $(this)
         $t.addClass 'active' if filters[ftype][$t.attr('data-param')]
 
-  $filterTypes.find('input:checkbox').uniform()
-
   lazyLoadPoster = ($movie) ->
     if !$movie.hasClass('loading')
       $movie.addClass('loading')
@@ -78,20 +79,46 @@ $ ->
           .attr('src', $movie.attr('data-thumb-src'))
           .load ->
             loaded++
-            updateLoadText()
+            updateLoadProgress()
             $movie.removeClass('lazyLoadNeeded loading')
 
   $thumbsLoading = $('.moviesList .movie.lazyLoadNeeded')
   $progress = $('.status .progress')
   [toLoad, loaded] = [$thumbsLoading.length, 0]
-  $progress.progressbar()
 
-  updateLoadText = ->
+  updateLoadProgress = ->
     $progress.progressbar 'option', 'value', ((loaded / toLoad) * 100)
     if loaded == toLoad
       $progress.fadeOut()
       $('.filters').fadeIn()
 
-  $thumbsLoading.each ->
-    lazyLoadPoster $(this)
+  # *** OCD margin management ***
+  _margins_set = false
+  [base_inner, base_outer] = [null, null]
+  updateMargins = ->
+    canvas = $('.moviesDisplay').innerWidth()
+    $movies = $('.moviesDisplay .movie')
+    return if $movies.length == 0
+    $sample = $movies.first()
+    base_inner ||= $sample.innerWidth()
+    base_outer ||= $sample.outerWidth(true)
 
+    ideal_per_row = Math.floor(canvas / base_outer)
+    margin_sum = canvas - (base_inner * ideal_per_row)
+    per_movie = Math.floor(margin_sum / ideal_per_row)
+    # Grab the hidden ones too
+    $('.movie').css('margin', per_movie / 2)
+    _margins_set = true
+
+  _resize_timer = null
+  $(window).resize ->
+    clearTimeout _resize_timer
+    _resize_timer = setTimeout updateMargins, 20
+  # *** End OCD margining ***
+
+
+  # *** Fire off document init events ***
+  $filterTypes.find('input:checkbox').uniform()
+  $thumbsLoading.each -> lazyLoadPoster $(this)
+  $progress.progressbar()
+  $filterTypes.each -> filters[$(this).attr('data-filterType')] = {}

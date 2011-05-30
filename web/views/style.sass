@@ -52,10 +52,11 @@ body
     .moviesDisplay
       clear: both
       .movie
-        @include box-shadow(#222, 0, 0, 7px)
-        float: left
-        margin: 30px 10px
         position: relative
+        display: inline-block
+        @include box-shadow(#222, 0, 0, 7px)
+        // float: left
+        margin: 15px
         text-align: center
         .mainTitle
           display: none

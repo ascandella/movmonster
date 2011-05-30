@@ -11,11 +11,6 @@
 
 
 @mixin transition($property, $duration: 0.5s)
-  @if type-of($duration) == string
-    $duration: unquote($duration)
-  @if type-of($property) == string
-    $property: unquote($property)
-
   -moz-transition-property: $property
   -webkit-transition-property: $property
 
