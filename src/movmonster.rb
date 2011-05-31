@@ -63,7 +63,7 @@ private
     end
 
     if (matches.is_a? Array)
-      matches.select! {|m| m.name.downcase.gsub(/^(the)|(a) /, '') == opts[:name].downcase}
+      matches.select! {|m| m.name.downcase.gsub(/^(the)|(a) /, '') == opts[:title].downcase}
       if @opts[:first_match] || matches.length == 0
         $logger.info "Got #{matches.length} results, ignoring"
         return Ignore.create :filename => filename
@@ -72,7 +72,7 @@ private
           $logger.debug("Found exact title match")
           matches = matches.first
         else
-          puts "Need clarification for #{opts[:name]}"
+          puts "Need clarification for #{opts[:title]}"
           matches.each_with_index do |m, i|
             puts "#{i}) #{m.name} #{m.released}"
           end
