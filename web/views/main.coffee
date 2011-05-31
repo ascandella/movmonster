@@ -93,7 +93,10 @@ $ ->
     $progress.progressbar 'option', 'value', ((loaded / toLoad) * 100)
     if loaded == toLoad
       $progress.fadeOut()
-      $('.filters').fadeIn()
+      # Temp
+      filterActions.category.all() if filters.category == {}
+      update()
+      # $('.filters').fadeIn()
 
   # *** OCD margin management ***
   _margins_set = false

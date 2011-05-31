@@ -48,6 +48,7 @@ DataMapper::Logger.new(log_file, log_level)
 Tmdb.api_key = config['tmdb_key']
 
 monster = MovMonster.new(config, opts)
+
 case cmd
 when 'fill'
   monster.fill_posters

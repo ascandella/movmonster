@@ -94,7 +94,7 @@ private
   end
 
   def add_match(m, filename, base_filename)
-    $logger.info "Adding match: #{base_filename}"
+    $logger.debug "Adding match: #{base_filename}"
 
     @config['categories'].each do |category, directory|
       # Grab the info from the movie object
