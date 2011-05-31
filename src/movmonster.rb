@@ -85,7 +85,7 @@ private
           end
           matches = matches[index]
         end
-        logger.info "Using #{matches.name} #{matches.released}"
+        $logger.info "Using #{matches.name} #{matches.released}"
       end
     end
 
