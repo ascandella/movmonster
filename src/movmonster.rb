@@ -57,13 +57,13 @@ private
   def find_best_match(opts)
     matches = TmdbMovie.find opts
     if (matches.nil?)
-      $logger.error "Could not find TMDB info for '#{base_name}'. Ignoring."
+      $logger.error "Could not find TMDB info for '#{opts[:title]}'. Ignoring."
       Ignore.create :filename => filename
       return
     end
 
     if (matches.is_a? Array)
-      matches.select! {|m| m.name.downcase.gsub(/^(the)|(a) /, '') == base_name.downcase}
+      matches.select! {|m| m.name.downcase.gsub(/^(the)|(a) /, '') == opts[:name].downcase}
       if @opts[:first_match] || matches.length == 0
         $logger.info "Got #{matches.length} results, ignoring"
         return Ignore.create :filename => filename
@@ -72,7 +72,7 @@ private
           $logger.debug("Found exact title match")
           matches = matches.first
         else
-          puts "Need clarification for #{base_name}"
+          puts "Need clarification for #{opts[:name]}"
           matches.each_with_index do |m, i|
             puts "#{i}) #{m.name} #{m.released}"
           end
