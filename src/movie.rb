@@ -14,7 +14,7 @@ class Movie
   has n, :posters
 
   def decade
-    year - (year % 10)
+    year - (year % 10) if year
   end
 
   def thumbnail
