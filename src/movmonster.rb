@@ -66,7 +66,8 @@ private
       matches.select! {|m| m.name.downcase.gsub(/^(the)|(a) /, '') == opts[:title].downcase}
       if @opts[:first_match] || matches.length == 0
         $logger.info "Got #{matches.length} results, ignoring"
-        return Ignore.create :filename => filename
+        Ignore.create :filename => filename
+        return
       else
         if (!matches.nil? && matches.length == 1)
           $logger.debug("Found exact title match")
