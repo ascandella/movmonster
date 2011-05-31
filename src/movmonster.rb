@@ -43,6 +43,16 @@ class MovMonster
     end
   end
 
+  def prune
+    Movie.all.each do |movie|
+      unless File.exist? movie.filename
+        $logger.warn "Removing #{movie.name} at #{movie.filename}"
+        movie.posters.destroy
+        movie.destroy
+      end
+    end
+  end
+
 private
   def find_best_match(opts)
     matches = TmdbMovie.find opts

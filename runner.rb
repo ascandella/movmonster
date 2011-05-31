@@ -13,7 +13,7 @@ require 'yaml'
 
 require File.join(File.dirname(__FILE__), 'src/movmonster')
 
-COMMANDS = %w(fill scan)
+COMMANDS = %w(fill prune scan)
 
 opts = Trollop::options do
   banner <<-EOS
@@ -22,6 +22,7 @@ usage: #{__FILE__} <command> [options]
 Possible commands:
 
    fill       Scan the database, filling in missing posters
+   prune      Remove movies with no matching file from the database
    scan       Look for new movies on the filesystem
 
 global options:
@@ -50,6 +51,8 @@ monster = MovMonster.new(config, opts)
 case cmd
 when 'fill'
   monster.fill_posters
+when 'prune'
+  monster.prune
 when 'scan'
   monster.scan_for_movies
 else
