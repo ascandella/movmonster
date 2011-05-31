@@ -13,7 +13,7 @@ require 'yaml'
 
 require File.join(File.dirname(__FILE__), 'src/movmonster')
 
-COMMANDS = %w(fill dryrun)
+COMMANDS = %w(fill scan)
 
 opts = Trollop::options do
   banner <<-EOS
@@ -21,8 +21,8 @@ usage: #{__FILE__} <command> [options]
 
 Possible commands:
 
-   fill       Scan the database, filling in missing info
-   dryrun     Don't actually do anything, just print debug info
+   fill       Scan the database, filling in missing posters
+   scan       Look for new movies on the filesystem
 
 global options:
 EOS
@@ -30,11 +30,11 @@ EOS
       :default => File.join( File.dirname(__FILE__), 'config.yml')
   opt :debug,     "Print more output", :default => false
   opt :stdout,    "Print log to stdout", :default => false
+  opt :create_dirs, "Create necessary directories for symlinks", :default => true
   stop_on COMMANDS
 end
 
 cmd = ARGV.shift
-dryrun = cmd == 'dryrun'
 
 Trollop::die :config, "must exist" unless File.exist?(opts[:config])
 config = YAML::load(File.open(opts[:config]))
@@ -47,4 +47,11 @@ DataMapper::Logger.new(log_file, log_level)
 Tmdb.api_key = config['tmdb_key']
 
 monster = MovMonster.new(config, opts)
-monster.run(dryrun)
+case cmd
+when 'fill'
+  monster.fill_posters
+when 'scan'
+  monster.scan_for_movies
+else
+  STDERR.puts "Unknown command '#{cmd}'"
+end

@@ -13,6 +13,10 @@ class Movie
 
   has n, :posters
 
+  def decade
+    year - (year % 10)
+  end
+
   def thumbnail
     @thumbnail ||= posters.detect{ |p| p.size == 'w154' }
   end
@@ -26,23 +30,50 @@ class Movie
   end
 
   def download_posters(sizes)
-    $logger.info("Fetching cover for #{self.name}")
-    begin
-      tm = TmdbMovie.images({:imdb => self.imdb_id})
-    rescue => ex
-      $logger.error("Error fetching info fon movie #{self.name}: #{ex.inspect}")
-      return
+    unless @tmdb_posters
+      $logger.info("Fetching cover for #{self.name}")
+      begin
+        tm = TmdbMovie.images({:imdb => self.imdb_id})
+      rescue => ex
+        $logger.error("Error fetching info fon movie #{self.name}: #{ex.inspect}")
+        return
+      end
+
+      return $logger.warn("Movie not found!") if tm.nil?
     end
-    if tm.nil?
-      $logger.warn("Movie not found!")
-      return
+    @tmdb_posters = tm['posters']
+    process_posters(sizes)
+  end
+
+  def self.parse_from_tmdb(m)
+    mov = Movie.new
+    mov.rating = m.rating.to_s
+    mov.genres = m.genres.map{ |g| g.name }.join(',') if m.genres
+    mov.year = Date.parse(m.released).year if m.released
+
+    directors = m.cast.select{ |c| c.job == 'Director' }
+    mov.director = directors.first.name if directors && directors.first
+    # Copy over the rest straight
+    mov.imdb_id, mov.certification, mov.name = m.imdb_id, m.certification, m.name
+    @tmdb_posters = m.posters
+    return mov
+  end
+
+  def [] (name)
+    if self.respond_to?(name.to_sym)
+      return self.send(name.to_sym)
     end
-    if tm['posters'].nil? || tm['posters'].length < 1
+  end
+
+private
+
+  def process_posters(sizes)
+    if @tmdb_posters.nil? || @tmdb_posters.length < 1
       $logger.warn("No covers found!")
       return
     end
 
-    posters = tm['posters'].select{ |m| m['image']['type'] == 'poster' }
+    posters = @tmdb_posters.select{ |m| m['image']['type'] == 'poster' }
     if posters.nil? || posters.length == 0
       $logger.warn("No covers of type 'poster' found. Bailing.")
       return
@@ -55,7 +86,6 @@ class Movie
     end
   end
 
-private
   def save_image(size, location, poster)
     $logger.warn("No image to save") and return if poster.nil?
     url = poster['image']['url']
@@ -97,4 +127,9 @@ private
 
   @@path_regex = /.*\.([^.]+)/
   @@name_regex = /.*\/([^\/]+)/
+end
+
+class Ignore 
+  include DataMapper::Resource
+  property :filename, String, :key => true
 end

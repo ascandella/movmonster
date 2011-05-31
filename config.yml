@@ -5,8 +5,20 @@ covers:
   w154:  web/public/covers/thumb
 tmdb_key:
 web_categories:
+  - All
   - Action
   - Adventure
   - Comedy
   - Drama
   - Horror
+  - Fantasy
+  - Science Fiction
+
+base_dir: /media/movies/All
+destination_dir: /media/movies
+categories:
+  decade: Decade
+  director: Director
+  genre: Genre
+  rating: Rating
+  year: Year

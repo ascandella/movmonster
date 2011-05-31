@@ -8,15 +8,18 @@ $ ->
 
   $filterTypes = $('.filters .filterType')
 
-  update =  ->
+  getFilteredData = ->
     $dat = $('.moviesList .movie')
     for key,value of filters
       for fKey, fValue of filters[key]
         $dat = $dat.filter("[data-#{fKey}='data-#{fKey}']") if filters[key][fKey]
+    return $dat
 
+  update =  ->
+    $data = getFilteredData()
     cb = -> updateMargins() unless _margins_set
-    if $dat.length < 30
-      $('.moviesDisplay').quicksand $dat,
+    if $data.length < 30
+      $('.moviesDisplay').quicksand $data,
         adjustHeight: 'auto'
         duration: 600
         easing: 'swing'
@@ -24,9 +27,9 @@ $ ->
       , cb
     else
       $('.moviesDisplay').css('height', 'auto')
-        .empty().append $dat.clone()
+        .empty().append $data.clone()
       cb()
-      if $dat.length == 0
+      if $data.length == 0
         $('.moviesDisplay').append($('.noMovies'))
           .clone().fadeIn()
 
@@ -113,12 +116,12 @@ $ ->
   _resize_timer = null
   $(window).resize ->
     clearTimeout _resize_timer
-    _resize_timer = setTimeout updateMargins, 20
+    _resize_timer = setTimeout updateMargins, 50
   # *** End OCD margining ***
-
 
   # *** Fire off document init events ***
   $filterTypes.find('input:checkbox').uniform()
   $thumbsLoading.each -> lazyLoadPoster $(this)
   $progress.progressbar()
   $filterTypes.each -> filters[$(this).attr('data-filterType')] = {}
+
