@@ -35,7 +35,7 @@ class MovMonster
 
       $logger.info "Looking up '#{base_name}'"
       opts = {:title => base_name, :limit => (@first_match ? 1 : 10)}
-      movie = find_best_match(opts)
+      movie = find_best_match(opts, filename)
       if movie
         add_match(movie, filename, base_filename)
         movie.download_posters(@config['covers'])
@@ -54,7 +54,7 @@ class MovMonster
   end
 
 private
-  def find_best_match(opts)
+  def find_best_match(opts, filename)
     matches = TmdbMovie.find opts
     if (matches.nil?)
       $logger.error "Could not find TMDB info for '#{opts[:title]}'. Ignoring."
