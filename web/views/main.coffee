@@ -10,9 +10,9 @@ $ ->
 
   getFilteredData = ->
     $dat = $('.moviesList .movie')
-    for key,value of filters
-      for fKey, fValue of filters[key]
-        $dat = $dat.filter("[data-#{fKey}='data-#{fKey}']") if filters[key][fKey]
+    for ftype,value of filters
+      for fKey, fValue of filters[ftype]
+        $dat = $dat.filter("[data-#{ftype}-#{fKey}='data-#{ftype}-#{fKey}']") if filters[ftype][fKey]
     return $dat
 
   update =  ->
@@ -96,7 +96,6 @@ $ ->
       # Temp
       filterActions.category.all() if filters.category == {}
       update()
-      # $('.filters').fadeIn()
 
   # *** OCD margin management ***
   _margins_set = false
@@ -111,9 +110,8 @@ $ ->
 
     ideal_per_row = Math.floor(canvas / base_outer)
     margin_sum = canvas - (base_inner * ideal_per_row)
-    per_movie = Math.floor(margin_sum / ideal_per_row)
     # Grab the hidden ones too
-    $('.movie').css('margin', per_movie / 2)
+    $('.movie').css('margin', Math.floor(margin_sum / ideal_per_row) / 2)
     _margins_set = true
 
   _resize_timer = null

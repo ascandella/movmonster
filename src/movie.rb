@@ -25,7 +25,8 @@ class Movie
   def attr_map 
     h = {'data-id' => id, 'class' => (thumbnail() ? 'withPoster lazyLoadNeeded' : 'noPoster')}
     h['data-thumb-src'] = thumbnail.href if thumbnail
-    genres.split(',').each{ |g| h[ "data-#{g.downcase.gsub(' ', '_')}"] = true }
+    h['data-posters'] = @posters.to_json
+    genres.split(',').each{ |g| h[ "data-category-#{g.downcase.gsub(' ', '_')}"] = true }
     h
   end
 
