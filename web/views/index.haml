@@ -6,21 +6,21 @@
       %a.catLink{:class => "actionFilter styledFilter catNamed#{safe_name}",
                  :href => "#", 'data-param' => safe_name}= cat
 
-.moviesList
+.detailsList.stagingArea
+  -# Store expanded info here for re-use
+.moviesList.stagingArea
   - @movies.each do |movie|
     .movie{movie.attr_map}
-      %h2.mainTitle= movie.name
       - if movie.thumbnail
         %img.poster
-      - else
-        .noPoster
 
       .details
         .detailContent
           .name= movie.name
           .year= movie.year
-          .rating= movie.rating
-          .genres= movie.genres
+          - if movie.rating > 0
+            .rating= movie.rating
+          .genres= movie.genres.gsub(',', ', ')
           .certification= movie.certification
 
 .moviesDisplay

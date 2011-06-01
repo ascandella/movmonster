@@ -50,6 +50,26 @@ body
     .moviesList
       display: none
 
+    .detailsList
+      .detailBox
+        display: none
+        &.active
+          position: fixed
+          z-index: 2
+          display: block
+          top: 10%
+          margin: 0 auto
+          .details
+            position: absolute
+            text-align: center
+            font-size: 350%
+            vertical-align: center
+            top: 0
+            left: 0
+            text-shadow: #000 0 0 10px
+            .name
+              display: none
+
     .moviesDisplay
       clear: both
       .movie
@@ -100,7 +120,6 @@ body
             top: 0
             background: #000
             opacity: 0.7
-          
 
     .noMovies
       display: none
@@ -113,6 +132,8 @@ body
           margin: 10px auto
           height: $thumb_height
           width: $thumb_width
+          .poster
+            padding: 20px 0
         .progress
           height: 15px
 

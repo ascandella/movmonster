@@ -59,10 +59,45 @@ $ ->
     updateFilterStyles()
     update()
 
+  hoveringOn = null
+  hoverTimer = null
+  $showing = null
+  $detailsList = $('.detailsList')
+  showHoverDetails = ($movie) ->
+    id = $movie.attr('data-id')
+    # See if we've already fetched the large image
+    $showing = $detailsList.find(".detailBox[data-id='#{id}']")
+    if $showing.length > 0
+      $showing.addClass('active')
+      return
+
+    [best, width] = [null, 0]
+    for poster in JSON.parse $movie.attr('data-posters')
+      [best, width] = [poster, poster.width] if poster.width > width
+    # hacky
+    location = best.location.replace('web/public/', '')
+    $showing = $("<div class='detailBox' data-id='#{id}'/>")
+      .append($("<img src='#{location}'/>").load ->
+        $showing.addClass('active'))
+      .append($movie.find('.details').clone()
+        .height("#{best.height}px")
+        .width("#{best.width}px"))
+      .appendTo $detailsList
+
+
   # Use css to show/hide the info box
   $('.moviesDisplay').delegate '.movie.withPoster', 'hover', (e) ->
     $t = $(this)
     $poster = $t.find('.poster')
+    id = $t.attr('data-id')
+    # Hover out
+    if hoveringOn == id
+      hoveringOn = null
+      $showing.removeClass('active') if $showing
+      clearTimeout(hoverTimer)
+    else
+      hoverTimer = setTimeout (-> showHoverDetails $t), 350
+    hoveringOn = $t.attr('data-id')
     $t.find('.details').width($poster.width())
       .height($poster.height())
     $t.toggleClass('hover')
@@ -74,7 +109,8 @@ $ ->
       $filter.find('.styledFilter').removeClass('active').each ->
         $t = $(this)
         $t.addClass 'active' if filters[ftype][$t.attr('data-param')]
-
+ 
+  $preview = $('.intro .status .preview')
   lazyLoadPoster = ($movie) ->
     if !$movie.hasClass('loading')
       $movie.addClass('loading')
@@ -83,6 +119,7 @@ $ ->
           .load ->
             loaded++
             updateLoadProgress()
+            $preview.find('.poster').replaceWith $(this).clone()
             $movie.removeClass('lazyLoadNeeded loading')
 
   $thumbsLoading = $('.moviesList .movie.lazyLoadNeeded')
