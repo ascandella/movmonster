@@ -23,11 +23,11 @@ class Movie
 
   # Yea, not really model-level logic, I know
   def attr_map 
-    h = {'data-id' => id, 'class' => (thumbnail() ? 'withPoster lazyLoadNeeded' : 'noPoster')}
+    h = {'data-id' => id,
+         'data-posters' => @posters.to_json,
+         'class' => (thumbnail() ? 'withPoster lazyLoadNeeded' : 'noPoster')}
     h['data-thumb-src'] = thumbnail.href if thumbnail
-    h['data-posters'] = @posters.to_json
-    genres.split(',').each{ |g| h[ "data-category-#{g.downcase.gsub(' ', '_')}"] = true }
-    h
+    genres.split(',').reduce(h){ |ha, g| ha["data-category-#{g.downcase.gsub(' ', '_')}"] = true; ha }
   end
 
   def download_posters(sizes)
