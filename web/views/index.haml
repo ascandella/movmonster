@@ -5,6 +5,8 @@
       %input.catChecker{:type => 'checkbox', 'data-param' => safe_name}
       %a.catLink{:class => "actionFilter styledFilter catNamed#{safe_name}",
                  :href => "#", 'data-param' => safe_name}= cat
+  .filterType.year{'data-filter_type' => 'year'}
+    .slider{'data-min' => @min_year, 'data-max' => @max_year}
 
 .detailsList.stagingArea
   -# Store expanded info here for re-use

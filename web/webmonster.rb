@@ -10,8 +10,11 @@ require 'data_mapper'
 require 'dm-postgres-adapter'
 require 'sass/plugin'
 
-require File.join(File.dirname(__FILE__), '../src/movie')
-require File.join(File.dirname(__FILE__), '../src/poster')
+base_name = File.join(File.dirname(__FILE__), '../src/')
+require File.join(base_name, 'models/ignore')
+require File.join(base_name, 'models/movie')
+require File.join(base_name, 'models/poster')
+require File.join(base_name, 'models/request')
 
 config = YAML::load(File.open(File.join(File.dirname(__FILE__), '..', 'config.yml')))
 
@@ -22,6 +25,8 @@ DataMapper.finalize
 get '/' do
   @movies = Movie.all :order => [ :name.asc ]
   @cats   = config['web_categories']
+  @min_year = (Movie.first :order => [ :year.asc ]).year
+  @max_year = (Movie.first :order => [ :year.desc ]).year
   haml :index
 end
 

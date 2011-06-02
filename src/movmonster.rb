@@ -1,5 +1,6 @@
-require File.join(File.dirname(__FILE__), 'movie')
-require File.join(File.dirname(__FILE__), 'poster')
+require File.join(File.dirname(__FILE__), 'models/ignore')
+require File.join(File.dirname(__FILE__), 'models/movie')
+require File.join(File.dirname(__FILE__), 'models/poster')
 
 class MovMonster
   def initialize(config, opts)

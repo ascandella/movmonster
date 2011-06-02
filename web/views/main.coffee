@@ -157,9 +157,12 @@ $ ->
     _resize_timer = setTimeout updateMargins, 50
   # *** End OCD margining ***
 
+  $yearSlider = $('.filterType.year .slider')
+
   # *** Fire off document init events ***
   $filterTypes.find('input:checkbox').uniform()
   $thumbsLoading.each -> lazyLoadPoster $(this)
   $progress.progressbar()
+  $yearSlider.slider min: $yearSlider.attr('data-min'), max: $yearSlider.attr('data-max')
   $filterTypes.each -> filters[$(this).attr('data-filterType')] = {}
 
