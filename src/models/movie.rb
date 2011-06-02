@@ -25,6 +25,7 @@ class Movie
   def attr_map 
     h = {'data-id' => id,
          'data-posters' => @posters.to_json,
+         'data-year' => @year,
          'class' => (thumbnail() ? 'withPoster lazyLoadNeeded' : 'noPoster')}
     h['data-thumb-src'] = thumbnail.href if thumbnail
     genres.split(',').reduce(h){ |ha, g| ha["data-category-#{g.downcase.gsub(' ', '_')}"] = true; ha }
@@ -128,9 +129,4 @@ private
 
   @@path_regex = /.*\.([^.]+)/
   @@name_regex = /.*\/([^\/]+)/
-end
-
-class Ignore 
-  include DataMapper::Resource
-  property :filename, String, :key => true
 end
