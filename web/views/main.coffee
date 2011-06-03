@@ -15,9 +15,23 @@ $ ->
         $dat = $dat.filter("[data-#{ftype}-#{fKey}='data-#{ftype}-#{fKey}']") if filters[ftype][fKey]
     return $dat
 
+  hookupHover = ($movies) ->
+    $movies.hover (e) ->
+      clearTimeout(hoverTimer) if hoverTimer
+      $m = $(e.target)
+      # console.log $m
+      $m = $m.closest('.movie') unless $m.is('.movie')
+      # console.log $m
+      hoverTimer = setTimeout (-> showHoverDetails $m), 500
+    , (e) ->
+      clearTimeout hoverTimer
+      $showing.fadeOut()
+    
   update =  ->
     $data = getFilteredData()
-    cb = -> updateMargins() unless _margins_set
+    cb = ->
+      updateMargins() unless _margins_set
+      hookupHover($('.moviesDisplay .movie'))
     if $data.length < 30
       $('.moviesDisplay').quicksand $data,
         adjustHeight: 'auto'
@@ -68,39 +82,20 @@ $ ->
     # See if we've already fetched the large image
     $showing = $detailsList.find(".detailBox[data-id='#{id}']")
     if $showing.length > 0
-      $showing.addClass('active')
+      $showing.addClass('active').fadeIn()
       return
 
     [best, width] = [null, 0]
     for poster in JSON.parse $movie.attr('data-posters')
       [best, width] = [poster, poster.width] if poster.width > width
     # hacky
-    location = best.location.replace('web/public/', '')
     $showing = $("<div class='detailBox' data-id='#{id}'/>")
-      .append($("<img src='#{location}'/>").load ->
+      .append($("<img src='#{best.web_location}'/>").load ->
         $showing.addClass('active'))
       .append($movie.find('.details').clone()
         .height("#{best.height}px")
         .width("#{best.width}px"))
       .appendTo $detailsList
-
-
-  # Use css to show/hide the info box
-  $('.moviesDisplay').delegate '.movie.withPoster', 'hover', (e) ->
-    $t = $(this)
-    $poster = $t.find('.poster')
-    id = $t.attr('data-id')
-    # Hover out
-    if hoveringOn == id
-      hoveringOn = null
-      $showing.removeClass('active') if $showing
-      clearTimeout(hoverTimer)
-    else
-      hoverTimer = setTimeout (-> showHoverDetails $t), 350
-    hoveringOn = $t.attr('data-id')
-    $t.find('.details').width($poster.width())
-      .height($poster.height())
-    $t.toggleClass('hover')
 
   updateFilterStyles = ->
     $filterTypes.each ->
@@ -168,5 +163,6 @@ $ ->
   $progress.progressbar()
   $yearSlider.slider min: $yearSlider.attr('data-min'), max: $yearSlider.attr('data-max')
 
-  $filterTypes.each -> filters[$(this).attr('data-filterType')] = {}
+  $filterTypes.each -> filters[$(this).attr('data-filter_type')] = {}
+
   # *** End document init events ***

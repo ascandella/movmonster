@@ -26,7 +26,7 @@ get '/' do
   @movies = Movie.all :order => [ :name.asc ]
   @cats   = config['web_categories']
   @min_year = (Movie.first :order => [ :year.asc ]).year
-  @max_year = (Movie.first :order => [ :year.desc ]).year
+  @max_year = (Movie.first :year.gt => @min_year , :order => [ :year.desc ]).year || @min_year
   haml :index
 end
 

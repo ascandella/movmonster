@@ -37,17 +37,19 @@ body
           &.active
             color: $background_color
             background: #ccc
-      .catLinks
-        float: right
-        .catLink
-          color: #aaa
-          margin: 0
-            right: 5px
-          text-decoration: none
-          &:last-child
-            margin-right: 0
-      &.year
-        clear: both
+
+        &.year
+          clear: both
+
+        &.catLinks
+          float: right
+          .catLink
+            color: #aaa
+            margin: 0
+              right: 5px
+            text-decoration: none
+            &:last-child
+              margin-right: 0
 
     .moviesList
       display: none
@@ -67,10 +69,13 @@ body
             font-size: 350%
             vertical-align: center
             top: 0
-            left: 0
             text-shadow: #000 0 0 10px
             .name
               display: none
+            &.left
+              left: 10%
+            &.right
+              right: 10%
 
     .moviesDisplay
       clear: both
