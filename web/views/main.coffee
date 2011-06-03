@@ -19,13 +19,11 @@ $ ->
     $movies.hover (e) ->
       clearTimeout(hoverTimer) if hoverTimer
       $m = $(e.target)
-      # console.log $m
       $m = $m.closest('.movie') unless $m.is('.movie')
-      # console.log $m
-      hoverTimer = setTimeout (-> showHoverDetails $m), 500
+      hoverTimer = setTimeout (-> showHoverDetails $m), 100
     , (e) ->
       clearTimeout hoverTimer
-      $showing.fadeOut()
+      $showing.removeClass('active').fadeOut()
     
   update =  ->
     $data = getFilteredData()
@@ -78,24 +76,29 @@ $ ->
   $showing = null
   $detailsList = $('.detailsList')
   showHoverDetails = ($movie) ->
+    $showing.fadeOut().removeClass('active') if $showing
     id = $movie.attr('data-id')
+    klass = if $movie.offset().left > ($(window).width() / 2) then 'left' else 'right'
     # See if we've already fetched the large image
     $showing = $detailsList.find(".detailBox[data-id='#{id}']")
     if $showing.length > 0
-      $showing.addClass('active').fadeIn()
+      $showing.removeClass('left right')
+        .hide()
+        .addClass("active #{klass}").fadeIn()
       return
 
     [best, width] = [null, 0]
     for poster in JSON.parse $movie.attr('data-posters')
       [best, width] = [poster, poster.width] if poster.width > width
     # hacky
-    $showing = $("<div class='detailBox' data-id='#{id}'/>")
-      .append($("<img src='#{best.web_location}'/>").load ->
-        $showing.addClass('active'))
-      .append($movie.find('.details').clone()
-        .height("#{best.height}px")
-        .width("#{best.width}px"))
-      .appendTo $detailsList
+    if best
+      $showing = $("<div class='detailBox' data-id='#{id}'/>")
+        .append($("<img src='#{best.web_location}'/>").load ->
+          $showing.hide().addClass("active #{klass}").fadeIn())
+        .append($movie.find('.details').clone()
+          .height("#{best.height}px")
+          .width("#{best.width}px"))
+        .appendTo $detailsList
 
   updateFilterStyles = ->
     $filterTypes.each ->
