@@ -38,7 +38,7 @@ class MovMonster
       opts = {:title => base_name, :limit => (@first_match ? 1 : 10)}
       movie = find_best_match(opts, filename)
       if movie
-        add_match(movie, filename, base_filename)
+        add_match(movie, filename)
         movie.download_posters(@config['covers'])
       end
     end
@@ -51,6 +51,12 @@ class MovMonster
         movie.posters.destroy
         movie.destroy
       end
+    end
+  end
+
+  def relink
+    Movie.all.each do |movie|
+      movie.create_links(@config, @opts)
     end
   end
 
@@ -94,40 +100,16 @@ private
     return Movie.parse_from_tmdb(matches)
   end
 
-  def add_match(m, filename, base_filename)
-    $logger.debug "Adding match: #{base_filename}"
-
-    @config['categories'].each do |category, directory|
-      # Grab the info from the movie object
-      folders = m[category]
-      next if folders.nil?
-
-      if !folders.is_a?(Array)
-        folders = [folders]
-      end
-      folders.each do |folder|
-        full_folder = File.join(@config['destination_dir'],
-           directory, folder.to_s)
-        create_link(@config['base_dir'], full_folder,
-            base_filename, base_filename)
-        # TODO: Intelligent rename? Could get us into trouble
-      end
-    end
+  def add_match(movie, filename)
+    $logger.debug "Adding match: #{filename}"
     m.filename = filename
+    m.create_links(@config, @opts)
     m.save
   end
 
   def create_link(source_dir, dest_dir, filename, dest_filename = nil)
     # Default to the original filename
     dest_filename ||= filename
-    if @opts[:create_dirs] && !File.exists?(dest_dir)
-      FileUtils.mkdir_p(dest_dir)
-    end
 
-    exec_str = "ln -s \"#{File.join(source_dir, filename)}\" \"" +
-      File.join(dest_dir, dest_filename) + "\""
-    if (!system(exec_str))
-      $logger.error("Could not execute command: #{exec_str}")
-    end
   end
 end

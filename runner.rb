@@ -24,6 +24,7 @@ Possible commands:
    fill       Scan the database, filling in missing posters
    prune      Remove movies with no matching file from the database
    scan       Look for new movies on the filesystem
+   relink     Ensure symlinks exist for all movies in the database
 
 global options:
 EOS
@@ -56,6 +57,8 @@ when 'prune'
   monster.prune
 when 'scan'
   monster.scan_for_movies
+when 'relink'
+  monster.relink
 else
   STDERR.puts "Unknown command '#{cmd}'"
 end
