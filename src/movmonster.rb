@@ -26,8 +26,6 @@ class MovMonster
       end
       base_name = base_parts.join(" ")
 
-      $logger.debug "Filename: #{filename}"
-
       # Check to see if it's a bad title so we don't hammer TMDB
       if Ignore.count(:filename => filename) > 0 ||
          Movie.count(:filename => filename) > 0
@@ -105,11 +103,5 @@ private
     movie.filename = filename
     movie.create_links(@config, @opts)
     movie.save
-  end
-
-  def create_link(source_dir, dest_dir, filename, dest_filename = nil)
-    # Default to the original filename
-    dest_filename ||= filename
-
   end
 end
