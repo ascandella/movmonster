@@ -102,9 +102,9 @@ private
 
   def add_match(movie, filename)
     $logger.debug "Adding match: #{filename}"
-    m.filename = filename
-    m.create_links(@config, @opts)
-    m.save
+    movie.filename = filename
+    movie.create_links(@config, @opts)
+    movie.save
   end
 
   def create_link(source_dir, dest_dir, filename, dest_filename = nil)
