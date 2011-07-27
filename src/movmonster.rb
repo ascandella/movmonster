@@ -15,6 +15,7 @@ class MovMonster
   end
 
   def scan
+    Configurator.log.debug "Scanning directory: #{Configurator['base_dir']}"
     Dir.glob(File.join(Configurator['base_dir'], "*.{avi,mkv}")) do |filename|
       base_filename = File.basename(filename)
       base_parts = base_filename.split('.')
@@ -29,7 +30,7 @@ class MovMonster
         next
       end
 
-      $logger.info "Looking up '#{base_name}'"
+      Configurator.log.info "Looking up '#{base_name}'"
       opts = {:title => base_name, :limit => (@first_match ? 1 : 10)}
       movie = find_best_match(opts, filename)
       if movie
@@ -42,7 +43,7 @@ class MovMonster
   def prune
     Movie.all.each do |movie|
       unless File.exist? movie.filename
-        $logger.warn "Removing #{movie.name} at #{movie.filename}"
+        Configurator.log.warn "Removing #{movie.name} at #{movie.filename}"
         movie.posters.destroy
         movie.destroy
       end
@@ -64,7 +65,7 @@ private
   def find_best_match(opts, filename)
     matches = TmdbMovie.find opts
     if (matches.nil?)
-      $logger.error "Could not find TMDB info for '#{opts[:title]}'. Ignoring."
+      Configurator.log.error "Could not find TMDB info for '#{opts[:title]}'. Ignoring."
       Ignore.create :filename => filename
       return
     end
@@ -72,12 +73,12 @@ private
     if (matches.is_a? Array)
       matches.select! {|m| m.name.downcase.gsub(/^(the)|(a) /, '') == opts[:title].downcase}
       if Configurator[:first_match] || matches.length == 0
-        $logger.info "Got #{matches.length} results, ignoring"
+        Configurator.log.info "Got #{matches.length} results, ignoring"
         Ignore.create :filename => filename
         return
       else
         if (!matches.nil? && matches.length == 1)
-          $logger.debug("Found exact title match")
+          Configurator.log.debug("Found exact title match")
           matches = matches.first
         else
           puts "Need clarification for #{opts[:title]}"
@@ -93,7 +94,7 @@ private
           end
           matches = matches[index]
         end
-        $logger.info "Using #{matches.name} #{matches.released}"
+        Configurator.log.info "Using #{matches.name} #{matches.released}"
       end
     end
 
@@ -101,7 +102,7 @@ private
   end
 
   def add_match(movie, filename)
-    $logger.debug "Adding match: #{filename}"
+    Configurator.log.debug "Adding match: #{filename}"
     movie.filename = filename
     movie.create_links
     movie.save

@@ -37,15 +37,15 @@ class Movie
 
   def download_posters(sizes)
     unless @tmdb_posters
-      $logger.info("Fetching cover for #{self.name}")
+      Configurator.log.info("Fetching cover for #{self.name}")
       begin
         tm = TmdbMovie.images({:imdb => self.imdb_id})
       rescue => ex
-        $logger.error("Error fetching info fon movie #{self.name}: #{ex.inspect}")
+        Configurator.log.error("Error fetching info fon movie #{self.name}: #{ex.inspect}")
         return
       end
 
-      return $logger.warn("Movie not found!") if tm.nil?
+      return Configurator.log.warn("Movie not found!") if tm.nil?
     end
     @tmdb_posters = tm['posters']
     process_posters(sizes)
@@ -83,14 +83,14 @@ class Movie
 
         target = File.join(dest_dir, filename)
         if File.symlink?(target)
-          $logger.debug("Skipping link creation for #{target}, as it already exists")
+          Configurator.log.debug("Skipping link creation for #{target}, as it already exists")
           next
         end
 
-        $logger.debug("Creating link to #{target}")
+        Configurator.log.debug("Creating link to #{target}")
 
         if !File.symlink( File.join(Configurator['base_dir'], filename), target )
-            $logger.error("Coouldn't symlink #{filename} from #{Configurator['base_dir']} to #{target}")
+            Configurator.log.error("Coouldn't symlink #{filename} from #{Configurator['base_dir']} to #{target}")
         end
       end
     end
@@ -106,13 +106,13 @@ private
 
   def process_posters(sizes)
     if @tmdb_posters.nil? || @tmdb_posters.length < 1
-      $logger.warn("No covers found!")
+      Configurator.log.warn("No covers found!")
       return
     end
 
     posters = @tmdb_posters.select{ |m| m['image']['type'] == 'poster' }
     if posters.nil? || posters.length == 0
-      $logger.warn("No covers of type 'poster' found. Bailing.")
+      Configurator.log.warn("No covers of type 'poster' found. Bailing.")
       return
     end
 
@@ -124,12 +124,12 @@ private
   end
 
   def save_image(size, location, poster)
-    $logger.warn("No image to save") and return if poster.nil?
+    Configurator.log.warn("No image to save") and return if poster.nil?
     url = poster['image']['url']
     begin
       uri = URI.parse(url)
     rescue
-      $logger.error("Couldn't parse URL #{url}!")
+      Configurator.log.error("Couldn't parse URL #{url}!")
       return
     end
 
@@ -148,7 +148,7 @@ private
       :width => poster['image']['width'], :height => poster['image']['height']
 
     if File.exists? abs_path
-      $logger.info "Found existing thumb at location #{abs_path}. " +
+      Configurator.log.info "Found existing thumb at location #{abs_path}. " +
                    "If you with to re-fetch it, please delete the original."
       return
     end
@@ -159,7 +159,7 @@ private
         file.write(resp.body)
       end
     end
-    $logger.debug("Saved cover to #{abs_path}")
+    Configurator.log.debug("Saved cover to #{abs_path}")
   end
 
   @@path_regex = /.*\.([^.]+)/

@@ -33,6 +33,7 @@ EOS
       :default => File.join( File.dirname(__FILE__), 'config.yml')
   opt :debug,     "Print more output", :default => false
   opt :stdout,    "Print log to stdout", :default => false
+  opt :env,       "Use specified environment for configuration", :default => 'production'
   opt :create_dirs, "Create necessary directories for symlinks", :default => true
   stop_on COMMANDS
 end
@@ -42,7 +43,7 @@ cmd = ARGV.shift
 Trollop::die :config, "must exist" unless File.exist?(opts[:config])
 
 # Load in config.yml file
-Configurator.load_yaml(opts[:config])
+Configurator.load_yaml(opts[:config], opts[:env])
 # Load in runtime options
 Configurator.merge!(opts)
 Configurator.setup!

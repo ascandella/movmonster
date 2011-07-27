@@ -12,7 +12,7 @@ class Configurator
         $stderr.puts "WARNING: No log file configured, using stderr"
         file = $stderr
       else
-        file = File.open(self['log'], 'w+')
+        file = File.open(self['log'], 'a')
       end
     end
 
@@ -32,7 +32,7 @@ class Configurator
     @@yams.has_key?(key.to_s) ? @@yams[key.to_s] : @@yams[key.to_sym]
   end
 
-  def log
+  def self.log
     @@logger
   end
 end
