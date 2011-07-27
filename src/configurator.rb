@@ -1,3 +1,13 @@
+require 'rubygems'
+require 'bundler/setup'
+
+require 'yaml'
+require 'data_mapper'
+require 'dm-postgres-adapter'
+require 'logger'
+require 'net/http'
+require 'ruby-tmdb'
+
 # A really dumb singleton-esque config manager
 class Configurator
   def self.load_yaml(filename, environment = 'production')
@@ -34,5 +44,9 @@ class Configurator
 
   def self.log
     @@logger
+  end
+
+  def self.clear!
+    @@yams = @@logger = nil
   end
 end

@@ -1,15 +1,7 @@
 #!/usr/bin/env ruby
 
 require 'rubygems'
-require 'bundler/setup'
-
-require 'data_mapper'
-require 'dm-postgres-adapter'
-require 'logger'
-require 'net/http'
-require 'ruby-tmdb'
 require 'trollop'
-require 'yaml'
 
 require File.join(File.dirname(__FILE__), 'src/configurator')
 require File.join(File.dirname(__FILE__), 'src/movmonster')

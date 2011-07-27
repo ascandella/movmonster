@@ -38,6 +38,7 @@ class MovMonster
         movie.download_posters(Configurator['covers'])
       end
     end
+    Configurator.log.debug "Finished scan"
   end
 
   def prune
