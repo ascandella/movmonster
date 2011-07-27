@@ -11,9 +11,10 @@ require 'ruby-tmdb'
 require 'trollop'
 require 'yaml'
 
+require File.join(File.dirname(__FILE__), 'src/configurator')
 require File.join(File.dirname(__FILE__), 'src/movmonster')
 
-COMMANDS = %w(fill prune scan)
+COMMANDS = %w(fill prune scan relink)
 
 opts = Trollop::options do
   banner <<-EOS
@@ -39,26 +40,17 @@ end
 cmd = ARGV.shift
 
 Trollop::die :config, "must exist" unless File.exist?(opts[:config])
-config = YAML::load(File.open(opts[:config]))
 
-log_file = opts[:stdout] ? $stdout : File.open(config['log'], 'w+')
-log_level = opts[:debug] ? :debug  : :info
-$logger = Logger.new(log_file, log_level)
-DataMapper::Logger.new(log_file, log_level) 
+# Load in config.yml file
+Configurator.load_yaml(opts[:config])
+# Load in runtime options
+Configurator.merge!(opts)
+Configurator.setup!
 
-Tmdb.api_key = config['tmdb_key']
+monster = MovMonster.new
 
-monster = MovMonster.new(config, opts)
-
-case cmd
-when 'fill'
-  monster.fill_posters
-when 'prune'
-  monster.prune
-when 'scan'
-  monster.scan_for_movies
-when 'relink'
-  monster.relink
+if COMMANDS.include?(cmd) && monster.respond_to?(cmd)
+  monster.send cmd
 else
   STDERR.puts "Unknown command '#{cmd}'"
 end

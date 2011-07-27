@@ -3,22 +3,19 @@ require File.join(File.dirname(__FILE__), 'models/movie')
 require File.join(File.dirname(__FILE__), 'models/poster')
 
 class MovMonster
-  def initialize(config, opts)
-    @config, @opts = config, opts
-    DataMapper.setup(:default, @config['database'])
-    $logger.debug("Using database: #{@config['database']}")
+  def initialize
     DataMapper.finalize
   end
 
-  def fill_posters
+  def fill
     Movie.all.each do |movie|
       next if !movie.posters.nil? && movie.posters.length > 0
-      movie.download_posters(@config['covers'])
+      movie.download_posters(Configurator['covers'])
     end
   end
 
-  def scan_for_movies
-    Dir.glob(File.join(@config['base_dir'], "*.{avi,mkv}")) do |filename|
+  def scan
+    Dir.glob(File.join(Configurator['base_dir'], "*.{avi,mkv}")) do |filename|
       base_filename = File.basename(filename)
       base_parts = base_filename.split('.')
       if base_parts.length > 1
@@ -37,7 +34,7 @@ class MovMonster
       movie = find_best_match(opts, filename)
       if movie
         add_match(movie, filename)
-        movie.download_posters(@config['covers'])
+        movie.download_posters(Configurator['covers'])
       end
     end
   end
@@ -54,7 +51,7 @@ class MovMonster
 
   def relink
     Movie.all.each do |movie|
-      movie.create_links(@config, @opts)
+      movie.create_links
     end
   end
 
@@ -69,7 +66,7 @@ private
 
     if (matches.is_a? Array)
       matches.select! {|m| m.name.downcase.gsub(/^(the)|(a) /, '') == opts[:title].downcase}
-      if @opts[:first_match] || matches.length == 0
+      if Configurator[:first_match] || matches.length == 0
         $logger.info "Got #{matches.length} results, ignoring"
         Ignore.create :filename => filename
         return
@@ -101,7 +98,7 @@ private
   def add_match(movie, filename)
     $logger.debug "Adding match: #{filename}"
     movie.filename = filename
-    movie.create_links(@config, @opts)
+    movie.create_links
     movie.save
   end
 end

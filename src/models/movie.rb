@@ -65,19 +65,19 @@ class Movie
     return mov
   end
 
-  def create_links(config, opts)
+  def create_links
     filename = File.basename(self.filename)
 
-    config['categories'].each do |category, directory|
+    Configurator['categories'].each do |category, directory|
       # See if we have any info available for this category
       folders = self[category]
       next if folders.nil?
 
       folders.to_s.split(',').each do |folder|
-        dest_dir = File.join(config['destination_dir'],
+        dest_dir = File.join(Configurator['destination_dir'],
            directory, folder.to_s)
 
-        if opts[:create_dirs] && !File.exists?(dest_dir)
+        if Configurator[:create_dirs] && !File.exists?(dest_dir)
           FileUtils.mkdir_p(dest_dir)
         end
 
@@ -89,8 +89,8 @@ class Movie
 
         $logger.debug("Creating link to #{target}")
 
-        if !File.symlink( File.join(config['base_dir'], filename), target )
-            $logger.error("Coouldn't symlink #{filename} from #{config['base_dir']} to #{target}")
+        if !File.symlink( File.join(Configurator['base_dir'], filename), target )
+            $logger.error("Coouldn't symlink #{filename} from #{Configurator['base_dir']} to #{target}")
         end
       end
     end
