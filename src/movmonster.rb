@@ -55,6 +55,11 @@ class MovMonster
     end
   end
 
+  # Be careful about calling this. Better yet, don't.
+  def migrate!
+    DataMapper.auto_migrate!
+  end
+
 private
   def find_best_match(opts, filename)
     matches = TmdbMovie.find opts
