@@ -7,7 +7,7 @@ require File.join(@@base_dir, 'src/movmonster')
 @@config_file = File.join(@@base_dir, 'config.yml')
 
 Configurator.load_yaml(@@config_file, 'test')
-Configurator.merge! :debug => true, :stdout => true
+Configurator.merge!
 Configurator.setup!
 
 def create_mock_movie(name, ext = '.avi')
