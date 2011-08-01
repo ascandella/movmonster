@@ -41,7 +41,7 @@ class Movie
       begin
         tm = TmdbMovie.images({:imdb => self.imdb_id})
       rescue => ex
-        Configurator.log.error("Error fetching info fon movie #{self.name}: #{ex.inspect}")
+        Configurator.log.error("Error fetching info for movie #{self.name}: #{ex.inspect}")
         return
       end
 
@@ -71,6 +71,7 @@ class Movie
     Configurator['categories'].each do |category, directory|
       # See if we have any info available for this category
       folders = self[category]
+      $stderr.puts(">> Folders: #{folders.inspect}")
       next if folders.nil?
 
       folders.to_s.split(',').each do |folder|
@@ -100,6 +101,11 @@ class Movie
     if self.respond_to?(name.to_sym)
       return self.send(name.to_sym)
     end
+  end
+
+  # For tests
+  def exist?
+    true
   end
 
 private

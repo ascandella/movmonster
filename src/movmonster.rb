@@ -14,29 +14,34 @@ class MovMonster
     end
   end
 
+  def lookup_movie(filename)
+    base_filename = File.basename(filename)
+    base_parts = base_filename.split('.')
+    $stderr.puts("Lookup #{base_parts.inspect}")
+    if base_parts.length > 1
+      base_parts = base_parts[(0..(base_parts.length-2))]
+    end
+    base_name = base_parts.join(" ")
+
+    # Check to see if it's a bad title so we don't hammer TMDB
+    if Ignore.count(:filename => filename) > 0 ||
+        Movie.count(:filename => filename) > 0
+      return
+    end
+
+    Configurator.log.info "Looking up '#{base_name}'"
+    opts = {:title => base_name, :limit => (@first_match ? 1 : 10)}
+    movie = find_best_match(opts, filename)
+    if movie
+      add_match(movie, File.join(Configurator[:base_dir], filename))
+      movie.download_posters(Configurator['covers'])
+    end
+  end
+
   def scan
     Configurator.log.debug "Scanning directory: #{Configurator['base_dir']}"
-    Dir.glob(File.join(Configurator['base_dir'], "*.{avi,mkv}")) do |filename|
-      base_filename = File.basename(filename)
-      base_parts = base_filename.split('.')
-      if base_parts.length > 1
-        base_parts = base_parts[(0..(base_parts.length-2))]
-      end
-      base_name = base_parts.join(" ")
-
-      # Check to see if it's a bad title so we don't hammer TMDB
-      if Ignore.count(:filename => filename) > 0 ||
-         Movie.count(:filename => filename) > 0
-        next
-      end
-
-      Configurator.log.info "Looking up '#{base_name}'"
-      opts = {:title => base_name, :limit => (@first_match ? 1 : 10)}
-      movie = find_best_match(opts, filename)
-      if movie
-        add_match(movie, filename)
-        movie.download_posters(Configurator['covers'])
-      end
+    Dir.glob(File.join(Configurator[:base_dir], "*.{avi,mkv}")) do |filename|
+      lookup_movie(filename)
     end
     Configurator.log.debug "Finished scan"
   end

@@ -15,29 +15,30 @@ defaults: &base
   categories:
     decade: Decade
     director: Director
-    genre: Genre
+    genres: Genre
     rating: Rating
     year: Year
+  create_dirs: true
 
 development:
   <<: *base
   database: 'postgres://localhost/movmonster_dev'
-  log: movmonster.log
+  log: ./movmonster.log
   covers:
     mid:   web/public/covers
     w154:  web/public/covers/thumb
-  base_dir: test/movies/All
-  destination_dir: test/movies
+  base_dir: test/movies
+  destination_dir: test/movies/filed
 
 test:
   <<: *base
   database: 'postgres://localhost/movmonster_test'
-  base_dir: test/movies/All
-  destination_dir: test/movies
+  base_dir: test/movies
+  destination_dir: test/movies/filed
   covers:
     mid:   test/covers
     w154:  test/covers/thumb
-  log: test/test.log
+  log: ./test/test.log
 
 production:
   <<: *base

@@ -14,6 +14,10 @@ class Configurator
     @@yams = YAML.load_file(filename)[environment]
   end
 
+  def self.base
+    @@base ||= File.join(File.dirname(__FILE__), '..')
+  end
+
   def self.setup!
     if self[:stdout]
       file = $stdout
@@ -22,7 +26,7 @@ class Configurator
         $stderr.puts "WARNING: No log file configured, using stderr"
         file = $stderr
       else
-        file = File.open(self['log'], 'a')
+        file = File.new(self['log'], 'a')
       end
     end
 

@@ -1,6 +1,8 @@
 movies.sqlite
 web/.sass-cache
 web/public/covers
+test/movies
+test/covers
 *.log
 .DS_Store
 .sass-cache
