@@ -71,7 +71,6 @@ class Movie
     Configurator['categories'].each do |category, directory|
       # See if we have any info available for this category
       folders = self[category]
-      $stderr.puts(">> Folders: #{folders.inspect}")
       next if folders.nil?
 
       folders.to_s.split(',').each do |folder|

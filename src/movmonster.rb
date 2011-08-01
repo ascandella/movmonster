@@ -17,7 +17,6 @@ class MovMonster
   def lookup_movie(filename)
     base_filename = File.basename(filename)
     base_parts = base_filename.split('.')
-    $stderr.puts("Lookup #{base_parts.inspect}")
     if base_parts.length > 1
       base_parts = base_parts[(0..(base_parts.length-2))]
     end
@@ -36,6 +35,7 @@ class MovMonster
       add_match(movie, File.join(Configurator[:base_dir], filename))
       movie.download_posters(Configurator['covers'])
     end
+    movie
   end
 
   def scan
