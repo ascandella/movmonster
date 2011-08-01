@@ -7,8 +7,6 @@ def get_movie(name, destroy_first = true)
     movie.destroy unless movie.nil?
   end
 
-  Configurator.log.error Movie.count :name => name
-
   filename = create_mock_movie name
   @monster.lookup_movie filename
 end
@@ -33,7 +31,6 @@ describe 'the monster' do
     get_movie name
     movie = Movie.first :name => name
     base_name = File.basename(movie.filename)
-    movie_path = Pathname.new movie.filename
     movie.genres.split(',').each do |genre|
       name = File.join(Configurator[:destination_dir],
                        Configurator[:categories]['genres'],
