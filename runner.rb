@@ -3,8 +3,9 @@
 require 'rubygems'
 require 'trollop'
 
-require File.join(File.dirname(__FILE__), 'src/configurator')
-require File.join(File.dirname(__FILE__), 'src/movmonster')
+%w{configurator movmonster}.map do |f|
+  require File.join(File.dirname(__FILE__), 'src', f)
+end
 
 COMMANDS = %w(fill prune scan relink)
 

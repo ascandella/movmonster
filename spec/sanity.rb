@@ -7,7 +7,7 @@ describe "the environment" do
   end
 
   it "should know about categories" do
-    cats = Configurator['categories']
+    cats = Configurator[:categories]
     cats.should_not be_nil
     cats.length.should be > 0
   end
@@ -16,6 +16,7 @@ end
 describe "the database" do
   before(:all) do
     @monster = MovMonster.new
+    Ignore.all.destroy
   end
 
   it "should not have anything to prune" do

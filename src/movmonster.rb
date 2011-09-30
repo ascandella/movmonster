@@ -1,6 +1,6 @@
-require File.join(File.dirname(__FILE__), 'models/ignore')
-require File.join(File.dirname(__FILE__), 'models/movie')
-require File.join(File.dirname(__FILE__), 'models/poster')
+%w{ignore movie poster}.map do |f|
+  require File.join(File.dirname(__FILE__), 'models', f)
+end
 
 class MovMonster
   def initialize
@@ -29,8 +29,13 @@ class MovMonster
     end
 
     Configurator.log.info "Looking up '#{base_name}'"
-    opts = {:title => base_name, :limit => (@first_match ? 1 : 10)}
-    movie = find_best_match(opts, filename)
+    opts = {:title => base_name, :limit => (Configurator[:first_match] ? 1 : 10)}
+    begin
+      movie = find_best_match(opts, filename)
+    rescue => ex
+      Configurator.log.error "Couldn't look up movie: #{base_name}... #{ex.inspect}"
+      return
+    end
     if movie
       add_match(movie, File.join(Configurator[:base_dir], filename))
       movie.download_posters(Configurator['covers'])
