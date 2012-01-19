@@ -48,7 +48,7 @@ $ ->
   $filterTypes.find('.actionFilter').click (event) ->
     event.preventDefault()
     $filt = $(this).closest('.filterType')
-    group = $filt.attr('data-filter_type')
+    group = $filt.data('filter_type')
     item  = $(event.target).attr 'data-param'
 
     $filt.find('input:checkbox')
@@ -67,7 +67,7 @@ $ ->
 
   $('.catLinks .catChecker').click (event) ->
     $t = $(event.target)
-    filters.category[$t.attr('data-param')] = $t.is(':checked')
+    filters.category[$t.data('param')] = $t.is(':checked')
     updateFilterStyles()
     update()
 
@@ -77,7 +77,7 @@ $ ->
   $detailsList = $('.detailsList')
   showHoverDetails = ($movie) ->
     $showing.fadeOut().removeClass('active') if $showing
-    id = $movie.attr('data-id')
+    id = $movie.data('id')
     klass = if $movie.offset().left > ($(window).width() / 2) then 'left' else 'right'
     # See if we've already fetched the large image
     $showing = $detailsList.find(".detailBox[data-id='#{id}']")
@@ -88,7 +88,7 @@ $ ->
       return
 
     [best, width] = [null, 0]
-    for poster in JSON.parse $movie.attr('data-posters')
+    for poster in JSON.parse $movie.data('posters')
       [best, width] = [poster, poster.width] if poster.width > width
     # hacky
     if best
@@ -103,17 +103,17 @@ $ ->
   updateFilterStyles = ->
     $filterTypes.each ->
       $filter = $(this)
-      ftype = $filter.attr('data-filter_type')
+      ftype = $filter.data('filter_type')
       $filter.find('.styledFilter').removeClass('active').each ->
         $t = $(this)
-        $t.addClass 'active' if filters[ftype][$t.attr('data-param')]
+        $t.addClass 'active' if filters[ftype][$t.data('param')]
  
   $preview = $('.intro .status .preview')
   lazyLoadPoster = ($movie) ->
     if !$movie.hasClass('loading')
       $movie.addClass('loading')
         .find('.poster')
-          .attr('src', $movie.attr('data-thumb-src'))
+          .attr('src', $movie.data('thumb-src'))
           .load ->
             loaded++
             updateLoadProgress()
@@ -164,8 +164,8 @@ $ ->
   $thumbsLoading.each -> lazyLoadPoster $(this)
 
   $progress.progressbar()
-  $yearSlider.slider min: $yearSlider.attr('data-min'), max: $yearSlider.attr('data-max')
+  $yearSlider.slider min: $yearSlider.data('min'), max: $yearSlider.data('max')
 
-  $filterTypes.each -> filters[$(this).attr('data-filter_type')] = {}
+  $filterTypes.each -> filters[$(this).data('filter_type')] = {}
 
   # *** End document init events ***

@@ -26,7 +26,6 @@ describe 'the monster' do
     movie = MovMonster::Movie.first :name => name
     movie.should exist
     movie.imdb_id.should == 'tt0104257'
-    MovMonster::Configurator.log.info "Found it: #{movie.inspect}"
   end
 
   it 'should handle data access' do
