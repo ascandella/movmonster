@@ -27,21 +27,23 @@ development:
   covers:
     mid:   web/public/covers
     w154:  web/public/covers/thumb
-  base_dir: test/movies
-  destination_dir: test/movies/filed
+  base_dirs:
+    - test/a-l
+    - test/m-z
+  destination_dir: test/filed
 
 test:
   <<: *base
   database: 'postgres://localhost/movmonster_test'
-  base_dir: test/movies
-  destination_dir: test/movies/filed
-  covers:
-    mid:   test/covers
-    w154:  test/covers/thumb
+  destination_dir: test/filed
+  base_dirs:
+    - test/a-l
+    - test/m-z
   log: ./test/test.log
 
 production:
   <<: *base
   database: 'postgres://movmonster:xxxxxxxxxx@localhost/movmonster'
-  base_dir: /home/media/movies/All
+  base_dirs:
+    - /media/external/movies/
   destination_dir: /media/movies

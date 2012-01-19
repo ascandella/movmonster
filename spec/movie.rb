@@ -2,8 +2,8 @@ require 'test-common'
 
 def get_movie(name, destroy_first = true)
   if destroy_first
-    movie = Movie.first :name => name
-    Configurator.log.info "Destroying record for '#{movie}'"
+    movie = MovMonster::Movie.first :name => name
+    MovMonster.log.info "Destroying record for '#{movie}'"
     movie.destroy unless movie.nil?
   end
 
@@ -13,20 +13,20 @@ end
 
 describe 'the monster' do
   before(:all) do
-    @monster = MovMonster.new
-    Movie.all.destroy
-    Poster.all.destroy
+    @monster = MovMonster::Monster.new
+    MovMonster::Movie.all.destroy
+    MovMonster::Poster.all.destroy
   end
 
   it 'should be able to look up a movie' do
     name = 'A Few Good Men'
     get_movie(name)
 
-    Configurator.log.info "Expecting to find '#{name}' in movies table"
-    movie = Movie.first :name => name
+    MovMonster.log.info "Expecting to find '#{name}' in movies table"
+    movie = MovMonster::Movie.first :name => name
     movie.should exist
     movie.imdb_id.should == 'tt0104257'
-    Configurator.log.info "Found it: #{movie.inspect}"
+    MovMonster::Configurator.log.info "Found it: #{movie.inspect}"
   end
 
   it 'should handle data access' do
@@ -42,15 +42,15 @@ describe 'the monster' do
     movie = get_movie name
     base_name = File.basename(movie.filename)
 
-    Configurator.log.info "Expecting symlinks for each of the genres: #{movie.genres}"
+    MovMonster.log.info "Expecting symlinks for each of the genres: #{movie.genres}"
     movie.genres.split(',').each do |genre|
-      name = File.join(Configurator[:destination_dir],
-                       Configurator[:categories]['genres'],
+      name = File.join(MovMonster::Configurator[:destination_dir],
+                       MovMonster::Configurator[:categories]['genres'],
                        genre, base_name)
-      Configurator.log.info "Found link at #{name}"
+      MovMonster.log.info "Found link at #{name}"
       File.readlink(name).to_s.should == movie.filename.to_s
     end
-    Configurator.log.info 'Genres seem sane'
+    MovMonster.log.info 'Genres seem sane'
   end
 
 end

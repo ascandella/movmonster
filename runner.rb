@@ -36,12 +36,12 @@ cmd = ARGV.shift
 Trollop::die :config, "must exist" unless File.exist?(opts[:config])
 
 # Load in config.yml file
-Configurator.load_yaml(opts[:config], opts[:env])
+MovMonster::Configurator.load_yaml(opts[:config], opts[:env])
 # Load in runtime options
-Configurator.merge!(opts)
-Configurator.setup!
+MovMonster::Configurator.merge!(opts)
+MovMonster::Configurator.setup!
 
-monster = MovMonster.new
+monster = MovMonster::Monster.new
 
 if COMMANDS.include?(cmd) && monster.respond_to?(cmd)
   monster.send cmd

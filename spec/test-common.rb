@@ -6,13 +6,13 @@ require 'rspec/expectations'
 
 @@config_file = File.join(@@base_dir, 'config.yml')
 
-Configurator.load_yaml(@@config_file, 'test')
-Configurator.merge! :stdout => true
-Configurator.setup!
+MovMonster::Configurator.load_yaml(@@config_file, 'test')
+MovMonster::Configurator.merge! :stdout => true
+MovMonster::Configurator.setup!
 
 def create_mock_movie(name, ext = '.avi')
   full = name + ext
-  fname = File.join(@@base_dir, Configurator[:base_dir], full)
+  fname = File.join(@@base_dir, MovMonster::Configurator[:base_dirs][0], full)
   File.new(fname, 'w') unless File.exist? fname
   full
 end
