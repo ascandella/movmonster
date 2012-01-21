@@ -22,12 +22,12 @@ $stderr.puts ">> This will overwrite any existing data you have in the movmonste
 gets
 
 %w{development test production}.each do |environment|
-  Configurator.clear!
-  Configurator.load_yaml(File.join(File.dirname(__FILE__), 'config.yml'), environment)
-  Configurator.merge!(:stdout => true)
-  Configurator.setup!
+  MovMonster::Configurator.clear!
+  MovMonster::Configurator.load_yaml(File.join(File.dirname(__FILE__), 'config.yml'), environment)
+  MovMonster::Configurator.merge!(:stdout => true)
+  MovMonster::Configurator.setup!
 
-  monster = MovMonster.new
+  monster = MovMonster::Monster.new
   monster.migrate!
 end
 
