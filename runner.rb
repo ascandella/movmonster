@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 
 require 'rubygems'
+require 'bundler/setup'
 require 'trollop'
 
 %w{configurator movmonster}.map do |f|
