@@ -54,7 +54,7 @@ module MovMonster
 
     def self.parse_from_tmdb(m)
       mov = Movie.new
-      mov.rating = m.rating.to_s
+      mov.rating = m.rating.to_i.to_s
       mov.genres = m.genres.map{ |g| g.name }.join(',') if m.genres
       mov.year = Date.parse(m.released).year if m.released
 
