@@ -47,7 +47,7 @@ module MovMonster
     def scan
       Configurator[:base_dirs].each do |base_dir|
         MovMonster.log.debug "Scanning directory: #{base_dir}"
-        Dir.glob(File.join(base_dir, "*.{avi,mkv}")) do |filename|
+        Dir.glob(File.join(base_dir, "*.{avi,mp4,mkv}")) do |filename|
           lookup_movie(filename)
         end
       end
