@@ -20,7 +20,8 @@ environment = ENV['RACK_ENV'] || :development
 config = YAML::load(File.open(File.join(File.dirname(__FILE__), '..', 'config.yml')))[environment.to_s]
 
 DataMapper::Logger.new($stdout, :info)
-DataMapper.setup(:default, config['database'])
+adapter = DataMapper.setup(:default, config['database'])
+adapter.resource_naming_convention = DataMapper::NamingConventions::Resource::UnderscoredAndPluralizedWithoutModule
 DataMapper.finalize
 
 get '/' do
