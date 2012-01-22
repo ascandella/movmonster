@@ -3,12 +3,12 @@ require 'rubygems'
 require 'bundler/setup'
 
 require 'sinatra'
-require 'sinatra/reloader' if development?
 require 'haml'
 require 'coffee_script'
 require 'data_mapper'
 require 'dm-postgres-adapter'
 require 'sass/plugin'
+require 'json'
 
 base_name = File.join(File.dirname(__FILE__), '../src/')
 require File.join(base_name, 'models/ignore')
