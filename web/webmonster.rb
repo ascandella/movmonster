@@ -16,7 +16,8 @@ require File.join(base_name, 'models/movie')
 require File.join(base_name, 'models/poster')
 require File.join(base_name, 'models/request')
 
-config = YAML::load(File.open(File.join(File.dirname(__FILE__), '..', 'config.yml')))
+environment = ENV['RACK_ENV'] || :development
+config = YAML::load(File.open(File.join(File.dirname(__FILE__), '..', 'config.yml')))[environment.to_s]
 
 DataMapper::Logger.new($stdout, :info)
 DataMapper.setup(:default, config['database'])
